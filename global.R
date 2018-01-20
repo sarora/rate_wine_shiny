@@ -3,6 +3,11 @@ suppressMessages({
   library(tidyverse)
   library(DT)
   library(RColorBrewer)
+  library(plotly)
   
 })
-wine <- readr::read_csv("data/wine_fil.csv")
+
+suppressWarnings(suppressMessages(wine <- readr::read_csv("data/wine_fil.csv")))
+
+suppressWarnings({wine <- wine %>% 
+  mutate(price = as.numeric(price))})

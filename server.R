@@ -8,9 +8,13 @@
 #
 
 
+
+
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
+  
+  
   
   output$countryOutput <- renderUI({
     wine <- wine 
@@ -49,7 +53,12 @@ shinyServer(function(input, output) {
   
   
   filtered_wine <- reactive({
-  
+     
+    if (is.null(input$countryInput)) {
+      return(NULL)
+    }
+    
+    
     subset(
       wine,
       country %in% input$countryInput &
@@ -60,11 +69,50 @@ shinyServer(function(input, output) {
   })
   
  
+    
   
-  output$wineResults <- renderDataTable({
-    filtered_wine() %>% select(country,price,points,title,variety)
-  })  
+    output$wineResults <- renderDataTable({
   
+      if (!is.null(input$countryInput) & length(input$countryInput>0)) {
+        filtered_wine() %>% select(country,price,points,title,variety)
+      }  
+    
+    })  
+  
+    
+    output$summaryText <- renderText({
+      numRows <- nrow(filtered_wine())
+      if (is.null(numRows)) {
+        numRows <- 0
+      }
+      paste0(numRows, " results found.")
+    
+      
+      
+    })
+    
+    
+    
+  output$graphProvResults <- renderPlotly({
+
+  
+    if (is.null( filtered_wine())) {
+      return(NULL)
+    }
+  
+    plot <- ggplot(filtered_wine(), aes(Name=title)) + 
+        geom_point(aes(price, points, colour=country)) +
+        labs(x="Price (USD)", y="Wine Rating", title="Comparing Wine Quality and Price per Country") +
+          theme_minimal() +
+            theme( plot.title = element_text(hjust = 0.5, size=20), axis.title.x = element_text(size=15),axis.title.y = element_text(size=15))
+
+     ggplotly(plot) %>% 
+       config(displayModeBar = FALSE)
+    
+
+  })
+  
+
   
 
   

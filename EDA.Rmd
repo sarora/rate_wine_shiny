@@ -21,6 +21,7 @@ summary(cars)
 
 ```{r}
 library(tidyverse)
+library(forcats)
 ```
 
 
@@ -126,7 +127,7 @@ write.csv(wine, file = "data/wine_fil.csv",row.names=FALSE, fileEncoding = "UTF-
 ```
 
 
-```{r}
+```{r, fig.width=10,fig.height=10}
 wine %>%select(country,variety) %>%  filter(country == "France") %>% group_by(variety) %>% summarise(count_v = n()) %>% arrange(desc(count_v))
 
 wine %>%select(country,variety) %>%  filter(country == "US") %>% group_by(variety) %>% summarise(count_v = n()) %>% arrange(desc(count_v))
@@ -135,11 +136,25 @@ wine %>%select(country,variety) %>%  filter(country == "England") %>% group_by(v
 
 
 
-wine %>%select(country,variety) %>% group_by(price) %>% summarise(count_v = n()) %>% arrange(desc(count_v))
+#wine %>%select(country,variety) %>% group_by(price) %>% summarise(count_v = n()) %>% arrange(desc(count_v))
 
 
 
+grape <- wine %>% group_by(country, province) %>%  summarise(count = n()) %>% arrange(desc(count)) %>% head(8)
 
+
+View(grape)
+
+View(wine)
+
+
+ggplot(data = wine, aes(Name=title)) + 
+      geom_point( aes(price, points, colour=country)) +
+      labs(x="Price (USD)", y="Wine Rating", title="Comparison of Wine Quality and Price by Country") +
+      theme_minimal() 
+  
+      theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5, size=20), axis.title.x = element_text(size=15),
+            axis.title.y = element_text(size=15))
 
 
 

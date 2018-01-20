@@ -11,7 +11,7 @@
 
 shinyUI(fluidPage(
   
-  theme = "style\bootstrap.css",
+  theme = "bootstrap.css",
   # Application title
   titlePanel("Wine Selector"),
   em("by Liquor Mogul"),
@@ -33,7 +33,11 @@ shinyUI(fluidPage(
     
     #Show a plot of the generated distribution
     mainPanel(
-      dataTableOutput("wineResults")
+      h5(textOutput("summaryText")),
+      plotlyOutput("graphProvResults"),
+      dataTableOutput("wineResults"),
+      verbatimTextOutput("selection")
+      
     )
   )
 ))
