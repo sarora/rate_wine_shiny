@@ -1,0 +1,151 @@
+---
+title: "EDA"
+author: "Sidd"
+date: "January 18, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+#### ReadIn and remove columns I do not need. (Pre-decided to o)
+```{r}
+wine <- readr::read_csv("data/winemag-data-130k-v2.csv")
+
+```
+
+
+### Remove columns I do not need 
+
+
+```{r}
+wine <- select(wine,-c(taster_name,taster_twitter_handle,region_2))
+
+```
+
+
+### Get dimensions
+
+```{r}
+glimpse(wine)
+```
+
+
+
+
+
+
+#### Find all columns which are blank
+
+```{r}
+### https://stackoverflow.com/questions/21951605/how-count-elements-in-an-column-that-are-not-empty
+
+BlankValues <- function(X) {
+sum(grepl("^\\s+$|^$",X))
+}
+apply(wine,2,BlankValues)
+
+```
+
+
+### Find all cells which are NA
+
+```{r}
+colSums(sapply(wine, is.na))
+```
+
+
+> Price have 8996 NA's. Decided to keep the NA's. User can ignore those wines if they want.
+
+
+#### Replacing blank Variety cell with its value. 
+
+```{r}
+
+#Cabernet Sauvignon: the actual value) (https://www.wine-searcher.com/wine-17569-1999-carmen-gold-reserve-cabernet-sauvignon-maipo-valley-chile)
+replace = which(is.na(wine$variety))
+wine[replace, "variety"] = "Cabernet Sauvignon"
+```
+
+
+#### Replace all values which are NA with Not Known.
+
+```{r}
+wine[is.na(wine)] <- "Not Known"
+
+```
+
+#### Check for 
+
+```{r}
+colSums(sapply(wine, is.na))
+
+```
+
+
+#### Check for duplicated rows. 
+
+```{r}
+paste("The number of duplicated rows are", nrow(wine) - nrow(unique(wine)))
+```
+
+#### Save dataframe as dataset.
+
+```{r}
+write.csv(wine, file = "data/wine_fil.csv",row.names=FALSE, fileEncoding = "UTF-8")
+
+```
+
+
+```{r}
+wine %>%select(country,variety) %>%  filter(country == "France") %>% group_by(variety) %>% summarise(count_v = n()) %>% arrange(desc(count_v))
+
+wine %>%select(country,variety) %>%  filter(country == "US") %>% group_by(variety) %>% summarise(count_v = n()) %>% arrange(desc(count_v))
+
+wine %>%select(country,variety) %>%  filter(country == "England") %>% group_by(variety) %>% summarise(count_v = n()) %>% arrange(desc(count_v))
+
+
+
+wine %>%select(country,variety) %>% group_by(price) %>% summarise(count_v = n()) %>% arrange(desc(count_v))
+
+
+
+
+
+
+
+
+
+```
+
+
+
