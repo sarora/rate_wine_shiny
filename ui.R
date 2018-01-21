@@ -18,6 +18,7 @@ shinyUI(fluidPage(
   br(),
   br(),
   
+  ### Layout of the filters
   
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
@@ -27,20 +28,21 @@ shinyUI(fluidPage(
       uiOutput("priceOutput"),
       hr(),
       uiOutput("scoreOutput"),
-      hr()
- 
+      hr(),
+      uiOutput("grapeType") 
     ),
     
     #Show a plot of the generated distribution
     mainPanel(
       h5(textOutput("summaryText")),
       plotlyOutput("graphProvResults"),
-      dataTableOutput("wineResults"),
-      verbatimTextOutput("selection")
+      #downloadButton("download", "Download Filtered Data"),
+      dataTableOutput("wineResults")
+      )
       
     )
   )
-))
+)
 
 
 

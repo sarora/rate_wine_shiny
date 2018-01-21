@@ -38,20 +38,25 @@ plot(pressure)
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
+
+
+
+
+
 #### ReadIn and remove columns I do not need. (Pre-decided to o)
 ```{r}
-wine <- readr::read_csv("data/winemag-data-130k-v2.csv")
-
+wine <- readr::read_csv("data/winedata.csv")
 ```
 
 
-### Remove columns I do not need 
+
+### Remove columns I do not need ... for now
 
 
 ```{r}
-wine <- select(wine,-c(taster_name,taster_twitter_handle,region_2))
-
+wine <- select(wine,-c(continent, X1))
 ```
+
 
 
 ### Get dimensions
@@ -59,9 +64,6 @@ wine <- select(wine,-c(taster_name,taster_twitter_handle,region_2))
 ```{r}
 glimpse(wine)
 ```
-
-
-
 
 
 
@@ -85,15 +87,13 @@ colSums(sapply(wine, is.na))
 ```
 
 
-> Price have 8996 NA's. Decided to keep the NA's. User can ignore those wines if they want.
-
 
 #### Replacing blank Variety cell with its value. 
 
 ```{r}
 
 #Cabernet Sauvignon: the actual value) (https://www.wine-searcher.com/wine-17569-1999-carmen-gold-reserve-cabernet-sauvignon-maipo-valley-chile)
-replace = which(is.na(wine$variety))
+replace = which((wine$variety)=="Unknown")
 wine[replace, "variety"] = "Cabernet Sauvignon"
 ```
 
@@ -119,6 +119,14 @@ colSums(sapply(wine, is.na))
 paste("The number of duplicated rows are", nrow(wine) - nrow(unique(wine)))
 ```
 
+#### Removing Duplicated Rows
+
+```{r}
+wine<- wine %>% distinct
+
+```
+
+
 #### Save dataframe as dataset.
 
 ```{r}
@@ -139,22 +147,13 @@ wine %>%select(country,variety) %>%  filter(country == "England") %>% group_by(v
 #wine %>%select(country,variety) %>% group_by(price) %>% summarise(count_v = n()) %>% arrange(desc(count_v))
 
 
-
-grape <- wine %>% group_by(country, province) %>%  summarise(count = n()) %>% arrange(desc(count)) %>% head(8)
+wine %>% group_by(Grape) %>%  summarise(count = n()) %>% arrange(desc(count))
 
 
 View(grape)
 
 View(wine)
 
-
-ggplot(data = wine, aes(Name=title)) + 
-      geom_point( aes(price, points, colour=country)) +
-      labs(x="Price (USD)", y="Wine Rating", title="Comparison of Wine Quality and Price by Country") +
-      theme_minimal() 
-  
-      theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5, size=20), axis.title.x = element_text(size=15),
-            axis.title.y = element_text(size=15))
 
 
 
