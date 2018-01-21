@@ -36,7 +36,6 @@ shinyUI(fluidPage(
     mainPanel(
       h5(textOutput("summaryText")),
       plotlyOutput("graphProvResults"),
-      #downloadButton("download", "Download Filtered Data"),
       dataTableOutput("wineResults")
       )
       

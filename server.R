@@ -54,7 +54,7 @@ shinyServer(function(input, output) {
   
   
   
-  ## radio Button for 
+  ## radio Button for Grape Type
   output$grapeType <- renderUI({
     radioButtons(
       "grapeVariety",
@@ -68,6 +68,7 @@ shinyServer(function(input, output) {
   })
   
   
+  ### grape Values
   
   filterGrape <- function() {
     if (input$grapeVariety == "Both") {
@@ -78,10 +79,8 @@ shinyServer(function(input, output) {
     
   }
   
-  observe({
-    print(filterGrape)
-  })
-  
+
+  ### Filtering values bases on user inputs
   
   filtered_wine <- reactive({
     if (is.null(input$countryInput)) {
@@ -102,7 +101,7 @@ shinyServer(function(input, output) {
 })
   
   
-  
+  ### Table for results
   output$wineResults = DT::renderDataTable({
     
     if (!is.null(input$countryInput) & length(input$countryInput > 0)) {
@@ -148,7 +147,7 @@ shinyServer(function(input, output) {
   }
    )
 
-  
+#### Plotting the graph  
  
   output$graphProvResults <- renderPlotly({
     if (is.null(filtered_wine())) {
