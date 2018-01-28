@@ -18,7 +18,7 @@ shinyServer(function(input, output) {
     selectInput(
       "countryInput",
       h5("Select Country: (can select multiple)"),
-      sort(unique(wine$country)),
+      sort(unique(wine$Country)),
       multiple = TRUE,
       selected = c("New Zealand","Australia")
       
@@ -27,7 +27,6 @@ shinyServer(function(input, output) {
   
   
   ## slider Input
-  
   output$priceOutput <- renderUI({
     sliderInput(
       "priceInput",
@@ -41,13 +40,14 @@ shinyServer(function(input, output) {
     )
   })
   
+  ### Ratings
   output$scoreOutput <- renderUI({
     sliderInput(
       "scoreInput",
       h5("Ratings:"),
       value = c(80, 85),
-      min = min(wine$points),
-      max = max(wine$points),
+      min = min(wine$Ratings),
+      max = max(wine$Ratings),
       sep = "",
       step = 2
     )
@@ -81,7 +81,7 @@ shinyServer(function(input, output) {
   }
   
 
-  ### Filtering values bases on user inputs
+  ### Filtering values based on user inputs
   
   filtered_wine <- reactive({
     if (is.null(input$countryInput)) {
@@ -90,13 +90,13 @@ shinyServer(function(input, output) {
     
  arrange(subset(
       wine,
-      country %in% input$countryInput &
-        price >= input$priceInput[1] &
-        price <= input$priceInput[2] &
-        points >= input$scoreInput[1] &
-        points <= input$scoreInput[2] &
+      Country %in% input$countryInput &
+        Price >= input$priceInput[1] &
+        Price <= input$priceInput[2] &
+        Ratings >= input$scoreInput[1] &
+        Ratings <= input$scoreInput[2] &
         Grape %in% filterGrape()
-    ),desc(points))
+    ),desc(Ratings))
   
     
 })
@@ -106,7 +106,7 @@ shinyServer(function(input, output) {
   output$wineResults = DT::renderDataTable({
     
     if (!is.null(input$countryInput) & length(input$countryInput > 0)) {
-      filtered_wine() %>% select(country, price, points, title, variety, Grape)
+      filtered_wine() %>% select(Country, Price, Ratings, Name, Variety, Grape)
     }
 },
   # table options
@@ -120,7 +120,7 @@ shinyServer(function(input, output) {
 
   
   
-  
+  ### warning text when results not found
 
   output$summaryText <- renderText({
     numRows <- nrow(filtered_wine())
@@ -155,8 +155,8 @@ shinyServer(function(input, output) {
       return(NULL)
     }
     
-    plot <- ggplot(filtered_wine(), aes(Name = title)) +
-      geom_jitter(aes(price, points, colour = country),alpha=0.6) +
+    plot <- ggplot(filtered_wine(), aes(Name = Name)) +
+      geom_jitter(aes(Price, Ratings, colour = Country),alpha=0.6) +
       labs(x = "Price (USD)", y = "Wine Rating", title = "Comparing Wine Quality and Price per Country") +
         scale_x_continuous(labels = scales::dollar_format()) +
           theme_minimal() +
@@ -171,10 +171,5 @@ shinyServer(function(input, output) {
     
     
   })
-  
-  
-  
-  
-  
-  
+
 })
