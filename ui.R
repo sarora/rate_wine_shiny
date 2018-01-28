@@ -35,7 +35,7 @@ shinyUI(fluidPage(
     #Show a plot of the generated distribution
     mainPanel(
       h5(textOutput("summaryText")),
-      plotlyOutput("graphProvResults"),
+      withSpinner(plotlyOutput("graphProvResults")),
       dataTableOutput("wineResults")
       )
       

@@ -25,18 +25,19 @@ shinyServer(function(input, output) {
     )
   })
   
+  
   ## slider Input
   
   output$priceOutput <- renderUI({
     sliderInput(
       "priceInput",
       h5("Price of Wine:"),
-      value = c(0, 60),
-      min = 0,
-      max = 3300,
+      value = c(10, 300),
+      min = 10,
+      max = 2000,
       pre = '$',
       sep = "",
-      step = 200
+      step = 40
     )
   })
   
@@ -155,7 +156,7 @@ shinyServer(function(input, output) {
     }
     
     plot <- ggplot(filtered_wine(), aes(Name = title)) +
-      geom_point(aes(price, points, colour = country)) +
+      geom_jitter(aes(price, points, colour = country),alpha=0.6) +
       labs(x = "Price (USD)", y = "Wine Rating", title = "Comparing Wine Quality and Price per Country") +
         scale_x_continuous(labels = scales::dollar_format()) +
           theme_minimal() +

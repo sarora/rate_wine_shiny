@@ -3,8 +3,8 @@ suppressMessages({
   library(tidyverse)
   library(DT)
   library(RColorBrewer)
+  library(shinycssloaders)
   library(plotly)
-  
 })
 
 suppressWarnings(suppressMessages(wine <- readr::read_csv("data/wine_fil.csv")))
