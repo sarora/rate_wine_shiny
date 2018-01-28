@@ -14,7 +14,7 @@ shinyUI(fluidPage(
   theme = "bootstrap.css",
   # Application title
   titlePanel("Wine Selector"),
-  em("by Liquor Mogul"),
+  em("by Sidd Arora"),
   br(),
   br(),
   

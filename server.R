@@ -43,7 +43,7 @@ shinyServer(function(input, output) {
   output$scoreOutput <- renderUI({
     sliderInput(
       "scoreInput",
-      h5("Points:"),
+      h5("Ratings:"),
       value = c(80, 85),
       min = min(wine$points),
       max = max(wine$points),
